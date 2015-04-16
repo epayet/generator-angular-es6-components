@@ -16,12 +16,7 @@ module.exports = yeoman.generators.Base.extend({
       'Welcome to the funkadelic ' + chalk.red('Angular ES6 Components') + ' generator!'
     ));
 
-    var prompts = [{
-      type: 'confirm',
-      name: 'someOption',
-      message: 'Would you like to enable this option?',
-      default: true
-    }];
+    var prompts = [];
 
     this.prompt(prompts, function (props) {
       this.props = props;
@@ -33,6 +28,7 @@ module.exports = yeoman.generators.Base.extend({
 
   writing: {
     app: function () {
+      this.config.save();
       this.fs.copy(
         this.templatePath('_package.json'),
         this.destinationPath('package.json')

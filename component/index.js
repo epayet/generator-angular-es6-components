@@ -37,45 +37,43 @@ module.exports = yeoman.generators.NamedBase.extend({
 
     writing: function () {
         var name = this._args[0];
-        var nameWithCaps = name;
-        nameWithCaps[0] = nameWithCaps[0].toUpperCase();
 
-        var args = {componentNameCaps: nameWithCaps, componentName: name};
-        this.fs.copy(
+        var args = {componentNameCaps: capitalizeFirstLetter(name), componentName: name};
+        this.fs.copyTpl(
             this.templatePath('_module.js'),
             this.destinationPath(name + '.js'),
             args
         );
-        this.fs.copy(
+        this.fs.copyTpl(
             this.templatePath('_controller.js'),
             this.destinationPath(name + '.controller.js'),
             args
         );
-        this.fs.copy(
+        this.fs.copyTpl(
             this.templatePath('_controller.spec.js'),
             this.destinationPath(name + '.controller.spec.js'),
             args
         );
-        this.fs.copy(
+        this.fs.copyTpl(
             this.templatePath('_service.js'),
             this.destinationPath(name + '.service.js'),
             args
         );
-        this.fs.copy(
+        this.fs.copyTpl(
             this.templatePath('_service.spec.js'),
             this.destinationPath(name + '.service.spec.js'),
             args
         );
-        this.fs.copy(
+        this.fs.copyTpl(
             this.templatePath('_directive.js'),
             this.destinationPath(name + '.directive.js'),
             args
         );
-        this.fs.copy(
+        this.fs.copyTpl(
             this.templatePath('_html.html'),
             this.destinationPath(name + '.html')
         );
-        this.fs.copy(
+        this.fs.copyTpl(
             this.templatePath('_css.css'),
             this.destinationPath(name + '.css')
         );
@@ -106,3 +104,7 @@ var getDirs = function (rootDir, cb) {
     }
   });
 };
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
