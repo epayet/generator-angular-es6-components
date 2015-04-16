@@ -26,13 +26,13 @@ Yeoman travels light. He didn't pack any generators when he moved in. You can th
 To install generator-generator-angular-es6-components from npm, run:
 
 ```bash
-npm install -g generator-generator-angular-es6-components
+npm install -g generator-angular-es6-components
 ```
 
 Finally, initiate the generator:
 
 ```bash
-yo generator angular es6 components
+yo angular-es6-components
 ```
 
 ### Getting To Know Yeoman

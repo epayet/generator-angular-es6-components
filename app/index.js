@@ -13,7 +13,7 @@ module.exports = yeoman.generators.Base.extend({
 
     // Have Yeoman greet the user.
     this.log(yosay(
-      'Welcome to the funkadelic ' + chalk.red('AngularEs6Components') + ' generator!'
+      'Welcome to the funkadelic ' + chalk.red('Angular ES6 Components') + ' generator!'
     ));
 
     var prompts = [{
