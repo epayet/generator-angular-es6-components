@@ -2,7 +2,7 @@ import <%= componentNameCaps %>Directive from './<%= componentName %>.directive.
 import <%= componentNameCaps %>Controller from './<%= componentName %>.controller.js';
 import <%= componentNameCaps %>Service from './<%= componentName %>.service.js';
 
-export default angular.module('<%= moduleName %>', [])
+export default angular.module('<%= moduleName %>.<%= componentName %>', [])
     .directive('<%= directiveName %>', <%= componentNameCaps %>Directive)
     .controller('<%= componentNameCaps %>Controller', <%= componentNameCaps %>Controller)
     .service('<%= componentName %>Service', <%= componentNameCaps %>Service)

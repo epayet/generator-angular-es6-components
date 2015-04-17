@@ -11,7 +11,7 @@ describe('angular-es6-components:component', function () {
 
     before(function (done) {
         helpers.run(path.join(__dirname, '../component'))
-            //.inDir(path.join( __dirname, '../test/component'))
+            //.inDir(path.join( __dirname, '/test1'))
             .withArguments(['name'])
             .withOptions({ skipInstall: true })
             .withPrompts({ subDirectory: subDirectory, destination: destination })

@@ -4,27 +4,31 @@ var chalk = require('chalk');
 var yosay = require('yosay');
 var fs = require('fs');
 
+var noModuleKey = 'No module at all';
+
 module.exports = yeoman.generators.NamedBase.extend({
     prompting: function () {
         var done = this.async();
         var componentName = this._args[0];
 
+        var projectDir = process.cwd();
+        try {
+            var modules = getDirs(projectDir + '/' + this.config.get('modulesLocation'));
+        } catch (err) {
+            this.log(chalk.red(err.message));
+            this.log(chalk.red('I were not able to find the modules folder, check the .yo-rc.json file'));
+            this.emit('error', 'Modules folder not found');
+            return done();
+        }
+
+        modules.push(noModuleKey);
+
         var prompts = [
             {
-                type: 'String',
-                name: 'destination',
-                message: 'Where would you like to create the component? (root directory)',
-                default: 'app/components'
-            }, {
-                type: 'String',
-                name: 'subDirectory',
-                message: 'The name of an eventual sub directory? Example: "sub". Default: none',
-                default: ''
-            }, {
-                type: 'String',
-                name: 'moduleName',
-                message: 'The name of the module?',
-                default: componentName
+                type: 'list',
+                name: 'module',
+                message: 'Choose a module',
+                choices: modules
             }, {
                 type: 'String',
                 name: 'directiveName',
@@ -43,13 +47,18 @@ module.exports = yeoman.generators.NamedBase.extend({
 
     writing: function () {
         var name = this._args[0];
-        var destination = addSlashAtTheEndIfIsNot(this.props.destination)
-            + addSlashAtTheEndIfIsNot(this.props.subDirectory);
+
+        var modulePath = this.props.module + '/';
+        if(this.props.module == noModuleKey) {
+            modulePath = '';
+        }
+
+        var destination = this.config.get('modulesLocation') + '/' + modulePath;
 
         var args = {
             componentNameCaps: capitalizeFirstLetter(name),
             componentName: name,
-            moduleName: this.props.moduleName,
+            moduleName: this.props.module == noModuleKey ? name : this.props.module,
             directiveName: this.props.directiveName
         };
 
@@ -89,6 +98,29 @@ module.exports = yeoman.generators.NamedBase.extend({
     },
 
     end: function() {
+        if(this.props.module != noModuleKey) {
+            var projectDir = process.cwd();
+            var folderPath = projectDir + '/' + this.config.get('modulesLocation') + '/' + this.props.module;
+            var components = getDirs(folderPath);
+
+            var fileContent = '';
+            for(var i=0; i<components.length; i++) {
+                var componentName = components[i];
+                fileContent += "import " + componentName + "Component from './" + componentName + "/" + componentName + ".js';\n";
+            }
+
+            fileContent += "\nexport default angular.module('" + this.props.module + ".components', [\n";
+
+            for(var i=0; i<components.length; i++) {
+                var componentName = components[i];
+                fileContent += "\t" + componentName + 'Component.name,\n';
+            }
+
+            fileContent += ']);';
+
+            fs.writeFileSync(folderPath + '/' + this.props.module + '.js', fileContent);
+        }
+
         var directive = this.props.directiveName;
         var name = this._args[0];
         this.log('');
@@ -97,28 +129,23 @@ module.exports = yeoman.generators.NamedBase.extend({
 });
 
 
-var getDirs = function (rootDir, cb) {
-  fs.readdir(rootDir, function (err, files) {
-    if(err) {
-      console.log(err);
-    }
-
+var getDirs = function (rootDir) {
+    var files = fs.readdirSync(rootDir);
     var dirs = [];
     for (var index = 0; index < files.length; ++index) {
-      file = files[index];
-      if (file[0] !== '.') {
-        var filePath = rootDir + '/' + file;
-        fs.stat(filePath, function (err, stat) {
-          if (stat.isDirectory()) {
-            dirs.push(file);
-          }
-          if (files.length === (index + 1)) {
-            return cb(dirs);
-          }
-        });
-      }
+        var file = files[index];
+        if (file[0] !== '.') {
+            var filePath = rootDir + '/' + file;
+            var stat = fs.statSync(filePath);
+            if (stat.isDirectory()) {
+                dirs.push(file);
+            }
+            if (files.length === (index + 1)) {
+                return dirs;
+            }
+        }
     }
-  });
+    return dirs;
 };
 
 function capitalizeFirstLetter(string) {
