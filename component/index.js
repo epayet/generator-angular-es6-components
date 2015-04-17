@@ -7,24 +7,30 @@ var fs = require('fs');
 module.exports = yeoman.generators.NamedBase.extend({
     prompting: function () {
         var done = this.async();
-
-        // Have Yeoman greet the user.
-        //this.log(yosay(
-        //  'Welcome to the funkadelic ' + chalk.red('Angular ES6 Components') + ' generator!'
-        //));
-
-        //getDirs(__dirname + '/app/components', function (modules) {
-        //  console.log(modules);
-        //});
-
+        var componentName = this._args[0];
 
         var prompts = [
-            //  {
-            //  type: 'String',
-            //  name: 'path',
-            //  message: 'Where would you like to create the component?',
-            //  default: 'app/components'
-            //}
+            {
+                type: 'String',
+                name: 'destination',
+                message: 'Where would you like to create the component? (root directory)',
+                default: 'app/components'
+            }, {
+                type: 'String',
+                name: 'subDirectory',
+                message: 'The name of an eventual sub directory? Example: "sub". Default: none',
+                default: ''
+            }, {
+                type: 'String',
+                name: 'moduleName',
+                message: 'The name of the module?',
+                default: componentName
+            }, {
+                type: 'String',
+                name: 'directiveName',
+                message: 'The name of the directive? It will be usable as <' + componentName + '></' + componentName + '>',
+                default: componentName
+            }
         ];
 
         this.prompt(prompts, function (props) {
@@ -37,46 +43,56 @@ module.exports = yeoman.generators.NamedBase.extend({
 
     writing: function () {
         var name = this._args[0];
+        var destination = addSlashAtTheEndIfIsNot(this.props.destination)
+            + addSlashAtTheEndIfIsNot(this.props.subDirectory);
 
-        var args = {componentNameCaps: capitalizeFirstLetter(name), componentName: name};
-        this.fs.copyTpl(
-            this.templatePath('_module.js'),
-            this.destinationPath(name + '.js'),
-            args
-        );
-        this.fs.copyTpl(
-            this.templatePath('_controller.js'),
-            this.destinationPath(name + '.controller.js'),
-            args
-        );
-        this.fs.copyTpl(
-            this.templatePath('_controller.spec.js'),
-            this.destinationPath(name + '.controller.spec.js'),
-            args
-        );
-        this.fs.copyTpl(
-            this.templatePath('_service.js'),
-            this.destinationPath(name + '.service.js'),
-            args
-        );
-        this.fs.copyTpl(
-            this.templatePath('_service.spec.js'),
-            this.destinationPath(name + '.service.spec.js'),
-            args
-        );
-        this.fs.copyTpl(
-            this.templatePath('_directive.js'),
-            this.destinationPath(name + '.directive.js'),
-            args
-        );
-        this.fs.copyTpl(
-            this.templatePath('_html.html'),
-            this.destinationPath(name + '.html')
-        );
-        this.fs.copyTpl(
-            this.templatePath('_css.css'),
-            this.destinationPath(name + '.css')
-        );
+        var args = {
+            componentNameCaps: capitalizeFirstLetter(name),
+            componentName: name,
+            moduleName: this.props.moduleName,
+            directiveName: this.props.directiveName
+        };
+
+        var files = [{
+            from: '_module.js',
+            to: '.js'
+        }, {
+            from: '_controller.js',
+            to: '.controller.js'
+        }, {
+            from: '_controller.spec.js',
+            to: '.controller.spec.js'
+        }, {
+            from: '_service.js',
+            to: '.service.js'
+        }, {
+            from: '_service.spec.js',
+            to: '.service.spec.js'
+        }, {
+            from: '_directive.js',
+            to: '.directive.js'
+        }, {
+            from: '_html.html',
+            to: '.html'
+        }, {
+            from: '_css.css',
+            to: '.css'
+        }];
+
+        for(var i=0; i<files.length; i++) {
+            this.fs.copyTpl(
+                this.templatePath(files[i].from),
+                this.destinationPath(destination + name + '/' + name + files[i].to),
+                args
+            );
+        }
+    },
+
+    end: function() {
+        var directive = this.props.directiveName;
+        var name = this._args[0];
+        this.log('');
+        this.log('Congratulations! You created the component ' + name + '. It will be usable as <' + directive + '></' + directive + '>');
     }
 });
 
@@ -107,4 +123,12 @@ var getDirs = function (rootDir, cb) {
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function addSlashAtTheEndIfIsNot(string) {
+    var isSlash = string[string.length - 1] == '=';
+    if (!isSlash) {
+        string += '/';
+    }
+    return string;
 }
