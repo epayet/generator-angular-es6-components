@@ -11,25 +11,20 @@ module.exports = yeoman.generators.NamedBase.extend({
         var done = this.async();
         var componentName = this._args[0];
 
-        var projectDir = process.cwd();
-        try {
-            var modules = getDirs(projectDir + '/' + this.config.get('modulesLocation'));
-        } catch (err) {
-            this.log(chalk.red(err.message));
-            this.log(chalk.red('I were not able to find the modules folder, check the .yo-rc.json file'));
-            this.emit('error', 'Modules folder not found');
-            return done();
-        }
+        //var projectDir = process.cwd();
+        //try {
+        //    var modules = getDirs(projectDir + '/' + this.config.get('modulesLocation'));
+        //} catch (err) {
+        //    this.log(chalk.red(err.message));
+        //    this.log(chalk.red('I were not able to find the modules folder, check the .yo-rc.json file'));
+        //    this.emit('error', 'Modules folder not found');
+        //    return done();
+        //}
 
-        modules.push(noModuleKey);
+        //modules.push(noModuleKey);
 
         var prompts = [
             {
-                type: 'list',
-                name: 'module',
-                message: 'Choose a module',
-                choices: modules
-            }, {
                 type: 'String',
                 name: 'directiveName',
                 message: 'The name of the directive? It will be usable as <' + componentName + '></' + componentName + '>',
@@ -48,12 +43,12 @@ module.exports = yeoman.generators.NamedBase.extend({
     writing: function () {
         var name = this._args[0];
 
-        var modulePath = this.props.module + '/';
-        if(this.props.module == noModuleKey) {
-            modulePath = '';
-        }
+        //var modulePath = this.props.module + '/';
+        //if(this.props.module == noModuleKey) {
+        //    modulePath = '';
+        //}
 
-        var destination = this.config.get('modulesLocation') + '/' + modulePath;
+        var destination = this.config.get('componentsLocation') + '/';
 
         var args = {
             componentNameCaps: capitalizeFirstLetter(name),
@@ -100,7 +95,7 @@ module.exports = yeoman.generators.NamedBase.extend({
     end: function() {
         if(this.props.module != noModuleKey) {
             var projectDir = process.cwd();
-            var folderPath = projectDir + '/' + this.config.get('modulesLocation') + '/' + this.props.module;
+            var folderPath = projectDir + '/' + this.config.get('componentsLocation') + '/';
             var components = getDirs(folderPath);
 
             var fileContent = '';
@@ -118,7 +113,7 @@ module.exports = yeoman.generators.NamedBase.extend({
 
             fileContent += ']);';
 
-            fs.writeFileSync(folderPath + '/' + this.props.module + '.js', fileContent);
+            fs.writeFileSync(folderPath + '/' + 'components.js', fileContent);
         }
 
         var directive = this.props.directiveName;
