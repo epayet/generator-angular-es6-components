@@ -51,12 +51,6 @@ module.exports = yeoman.generators.NamedBase.extend({
         };
 
         var files = [{
-            from: '_controller.js',
-            to: '.controller.js'
-        }, {
-            from: '_controller.spec.js',
-            to: '.controller.spec.js'
-        }, {
             from: '_directive.js',
             to: '.directive.js'
         }, {
@@ -80,10 +74,26 @@ module.exports = yeoman.generators.NamedBase.extend({
                 from: '_module.js',
                 to: '.js'
             });
+            files.push({
+                from: '_controller.js',
+                to: '.controller.js'
+            });
+            files.push({
+                from: '_controller.spec.js',
+                to: '.controller.spec.js'
+            });
         } else {
             files.push({
-                from: '_moduleWithoutService.js',
+                from: '/withoutService/_module.js',
                 to: '.js'
+            });
+            files.push({
+                from: '/withoutService/_controller.js',
+                to: '.controller.js'
+            });
+            files.push({
+                from: '/withoutService/_controller.spec.js',
+                to: '.controller.spec.js'
             });
         }
 
