@@ -6,28 +6,27 @@ var helpers = require('yeoman-generator').test;
 var os = require('os');
 
 describe('angular-es6-components:component', function () {
-    var subDirectory = 'sub';
-    var destination = 'custom/';
+    var destination = 'app/components';
 
     before(function (done) {
         helpers.run(path.join(__dirname, '../component'))
             //.inDir(path.join( __dirname, '/test1'))
             .withArguments(['name'])
-            .withOptions({ skipInstall: true })
-            .withPrompts({ subDirectory: subDirectory, destination: destination })
+            .withOptions({ skipInstall: true, appName: 'test' })
+            .withPrompts({ updateParentModule: false })
             .on('end', done);
     });
 
     it('creates all the files', function () {
         assert.file([
-            destination + subDirectory + '/name/name.js',
-            destination + subDirectory + '/name/name.controller.js',
-            destination + subDirectory + '/name/name.controller.spec.js',
-            destination + subDirectory + '/name/name.service.js',
-            destination + subDirectory + '/name/name.service.spec.js',
-            destination + subDirectory + '/name/name.directive.js',
-            destination + subDirectory + '/name/name.html',
-            destination + subDirectory + '/name/name.css',
+            destination + '/name/name.js',
+            destination + '/name/name.controller.js',
+            destination + '/name/name.controller.spec.js',
+            destination + '/name/name.service.js',
+            destination + '/name/name.service.spec.js',
+            destination + '/name/name.directive.js',
+            destination + '/name/name.html',
+            destination + '/name/name.css'
         ]);
     });
 });

@@ -2,26 +2,13 @@
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
-var fs = require('fs');
-
-var noModuleKey = 'No module at all';
 
 module.exports = yeoman.generators.NamedBase.extend({
     prompting: function () {
         var done = this.async();
         var componentName = this._args[0];
-
-        //var projectDir = process.cwd();
-        //try {
-        //    var modules = getDirs(projectDir + '/' + this.config.get('modulesLocation'));
-        //} catch (err) {
-        //    this.log(chalk.red(err.message));
-        //    this.log(chalk.red('I were not able to find the modules folder, check the .yo-rc.json file'));
-        //    this.emit('error', 'Modules folder not found');
-        //    return done();
-        //}
-
-        //modules.push(noModuleKey);
+        var appName = this.config.get('appName');
+        var moduleFile = appName ? appName + '.components.js' : 'components.js';
 
         var prompts = [
             {
@@ -29,6 +16,16 @@ module.exports = yeoman.generators.NamedBase.extend({
                 name: 'directiveName',
                 message: 'The name of the directive? It will be usable as <' + componentName + '></' + componentName + '>',
                 default: componentName
+            }, {
+                type: 'confirm',
+                name: 'generateService',
+                message: 'Generate a service ?',
+                default: true
+            }, {
+                type: 'confirm',
+                name: 'updateParentModule',
+                message: 'Update the parent module ? (' + moduleFile + ')',
+                default: true
             }
         ];
 
@@ -43,35 +40,22 @@ module.exports = yeoman.generators.NamedBase.extend({
     writing: function () {
         var name = this._args[0];
 
-        //var modulePath = this.props.module + '/';
-        //if(this.props.module == noModuleKey) {
-        //    modulePath = '';
-        //}
-
-        var destination = this.config.get('componentsLocation') + '/';
+        var componentsLocation = this.config.get('componentsLocation') ? this.config.get('componentsLocation') : 'app/components';
+        var destination = componentsLocation + '/';
 
         var args = {
             componentNameCaps: capitalizeFirstLetter(name),
             componentName: name,
-            moduleName: this.props.module == noModuleKey ? name : this.props.module,
+            moduleName: this.config.get('appName') ? this.config.get('appName') : 'app',
             directiveName: this.props.directiveName
         };
 
         var files = [{
-            from: '_module.js',
-            to: '.js'
-        }, {
             from: '_controller.js',
             to: '.controller.js'
         }, {
             from: '_controller.spec.js',
             to: '.controller.spec.js'
-        }, {
-            from: '_service.js',
-            to: '.service.js'
-        }, {
-            from: '_service.spec.js',
-            to: '.service.spec.js'
         }, {
             from: '_directive.js',
             to: '.directive.js'
@@ -83,6 +67,26 @@ module.exports = yeoman.generators.NamedBase.extend({
             to: '.css'
         }];
 
+        if(this.props.generateService) {
+            files.push({
+                from: '_service.js',
+                to: '.service.js'
+            });
+            files.push({
+                from: '_service.spec.js',
+                to: '.service.spec.js'
+            });
+            files.push({
+                from: '_module.js',
+                to: '.js'
+            });
+        } else {
+            files.push({
+                from: '_moduleWithoutService.js',
+                to: '.js'
+            });
+        }
+
         for(var i=0; i<files.length; i++) {
             this.fs.copyTpl(
                 this.templatePath(files[i].from),
@@ -93,7 +97,9 @@ module.exports = yeoman.generators.NamedBase.extend({
     },
 
     end: function() {
-        this.composeWith('angular-es6-components:updateComponents');
+        if(this.props.updateParentModule) {
+            this.composeWith('angular-es6-components:updateComponents');
+        }
     }
 });
 
