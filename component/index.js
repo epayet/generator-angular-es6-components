@@ -93,64 +93,10 @@ module.exports = yeoman.generators.NamedBase.extend({
     },
 
     end: function() {
-        if(this.props.module != noModuleKey) {
-            var projectDir = process.cwd();
-            var folderPath = projectDir + '/' + this.config.get('componentsLocation') + '/';
-            var components = getDirs(folderPath);
-
-            var fileContent = '';
-            for(var i=0; i<components.length; i++) {
-                var componentName = components[i];
-                fileContent += "import " + componentName + "Component from './" + componentName + "/" + componentName + ".js';\n";
-            }
-
-            fileContent += "\nexport default angular.module('" + this.props.module + ".components', [\n";
-
-            for(var i=0; i<components.length; i++) {
-                var componentName = components[i];
-                fileContent += "\t" + componentName + 'Component.name,\n';
-            }
-
-            fileContent += ']);';
-
-            fs.writeFileSync(folderPath + '/' + 'components.js', fileContent);
-        }
-
-        var directive = this.props.directiveName;
-        var name = this._args[0];
-        this.log('');
-        this.log('Congratulations! You created the component ' + name + '. It will be usable as <' + directive + '></' + directive + '>');
+        this.composeWith('angular-es6-components:updateComponents');
     }
 });
 
-
-var getDirs = function (rootDir) {
-    var files = fs.readdirSync(rootDir);
-    var dirs = [];
-    for (var index = 0; index < files.length; ++index) {
-        var file = files[index];
-        if (file[0] !== '.') {
-            var filePath = rootDir + '/' + file;
-            var stat = fs.statSync(filePath);
-            if (stat.isDirectory()) {
-                dirs.push(file);
-            }
-            if (files.length === (index + 1)) {
-                return dirs;
-            }
-        }
-    }
-    return dirs;
-};
-
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-function addSlashAtTheEndIfIsNot(string) {
-    var isSlash = string[string.length - 1] == '=';
-    if (!isSlash) {
-        string += '/';
-    }
-    return string;
 }
