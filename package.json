@@ -1,6 +1,6 @@
 {
   "name": "generator-angular-es6-components",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Yeoman generator",
   "license": "MIT",
   "main": "app/index.js",
@@ -14,7 +14,9 @@
     "test": "mocha"
   },
   "files": [
-    "app"
+    "app",
+    "component",
+    "updateComponents"
   ],
   "keywords": [
     "yeoman-generator"
