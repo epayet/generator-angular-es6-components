@@ -16,7 +16,15 @@ module.exports = yeoman.generators.Base.extend({
       'Welcome to the funkadelic ' + chalk.red('Angular ES6 Components') + ' generator!'
     ));
 
-    var prompts = [];
+    var prompts = [
+        {
+            type: 'String',
+            name: 'appName',
+            message: 'The name of the directive? It will be usable as <' + componentName + '></' + componentName + '>',
+            default: 'app',
+            save: true
+        }
+    ];
 
     this.prompt(prompts, function (props) {
       this.props = props;
