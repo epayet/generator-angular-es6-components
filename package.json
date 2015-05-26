@@ -16,7 +16,8 @@
   "files": [
     "app",
     "component",
-    "updateComponents"
+    "updateComponents",
+    "util"
   ],
   "keywords": [
     "yeoman-generator"
