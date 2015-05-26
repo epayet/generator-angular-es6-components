@@ -2,6 +2,9 @@
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
+var util = require('../util/dir');
+
+var noModuleKey = 'No module at all';
 
 module.exports = yeoman.generators.NamedBase.extend({
     prompting: function () {
@@ -10,7 +13,25 @@ module.exports = yeoman.generators.NamedBase.extend({
         var appName = this.config.get('appName');
         var moduleFile = appName ? appName + '.components.js' : 'components.js';
 
+        var projectDir = process.cwd();
+        try {
+            var modules = util.getDirs(projectDir + '/' + this.config.get('componentsLocation'));
+        } catch (err) {
+            this.log(chalk.red(err.message));
+            this.log(chalk.red('I were not able to find the modules folder, check the .yo-rc.json file'));
+            this.emit('error', 'Modules folder not found');
+            return done();
+        }
+
+        modules.push(noModuleKey);
+
         var prompts = [
+            {
+                type: 'list',
+                name: 'module',
+                message: 'Choose a module',
+                choices: modules
+            },
             {
                 type: 'String',
                 name: 'directiveName',
@@ -21,12 +42,13 @@ module.exports = yeoman.generators.NamedBase.extend({
                 name: 'generateService',
                 message: 'Generate a service ?',
                 default: true
-            }, {
-                type: 'confirm',
-                name: 'updateParentModule',
-                message: 'Update the parent module ? (' + moduleFile + ')',
-                default: true
-            }
+            },
+            //{
+            //    type: 'confirm',
+            //    name: 'updateParentModule',
+            //    message: 'Update the parent module ? (' + moduleFile + ')',
+            //    default: true
+            //}
         ];
 
         this.prompt(prompts, function (props) {
@@ -40,8 +62,13 @@ module.exports = yeoman.generators.NamedBase.extend({
     writing: function () {
         var name = this._args[0];
 
+        var modulePath = this.props.module + '/';
+        if(this.props.module == noModuleKey) {
+            modulePath = '';
+        }
+
         var componentsLocation = this.config.get('componentsLocation') ? this.config.get('componentsLocation') : 'app/components';
-        var destination = componentsLocation + '/';
+        var destination = componentsLocation + '/' + modulePath;
 
         var args = {
             componentNameCaps: capitalizeFirstLetter(name),
