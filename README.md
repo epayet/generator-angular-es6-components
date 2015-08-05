@@ -39,41 +39,41 @@ yo angular-es6-components
 #### Project structure
 
 ```
-├── app/                                * Source code of the application
-│   ├── app.config.js                   * The config file of the application (routes, etc.)
-│   ├── app.constants.js                * Constants (service urls, etc.)
-│   ├── app.js                          * Declaration of the angular application 
-│   ├── app.run.js                      * The first file to run when application starts
-│   ├── assets/                         * Images, etc.
-│   ├── components/                     * The main components
-│   │   ├── business/                   * Reusable components
-│   │   ├── appName.components.js       * Declaration of the components
-│   │   ├── container/                  * The container of every views
-│   │   ├── orchestration/              * Event listening and forwarding
-│   │   └── plugins/                    * Plugins components (event, http, etc.)
-│   ├── css/                            * Global CSS files
-│   ├── index.html                      * Entry point HTML
-│   ├── init.js                         * Entry point JS (angular bootstaping pollyfills)
-│   └── views/                          * Views of the application, use container components
-├── bower_components/                   * Third party libraries install via bower
-├── bower.json                          * The list of the third party libraries
-├── coverage/                           * The result of the unit test coverage
-├── dist/                               * The compiled application via gulp
-├── e2e/                                * The e2e tests
-│   ├── dist/                           * Compiled e2e tests
-│   └── src/                            * Source e2e tests (ES6)
-├── gulpfile.js                         * Contains the gulp build tasks
-├── karma.conf.js                       * The config file for karma test runner
-├── mobile/                             * The cordova directory project
-│   ├── config.xml                      * Cordova config file
-│   ├── hooks/                          * Used for plugins
-│   ├── platforms/                      * Cordova platforms
-│   ├── plugins/                        * Cordova plugins
-│   ├── res/                            * Resource files (splash, icons, etc.)
-│   └── www/                            * Compiled web source files
-├── node_modules/                       * Third party libraries used for gulp
-├── package.json                        * The list of the third party libraries for gulp
-├── protractor.conf.js                  * The config file for e2e tests
+├── app/                            * Source code of the application
+│   ├── app.config.js               * The config file of the application (routes, etc.)
+│   ├── app.constants.js            * Constants (service urls, etc.)
+│   ├── app.js                      * Declaration of the angular application 
+│   ├── app.run.js                  * The first file to run when application starts
+│   ├── assets/                     * Images, etc.
+│   ├── components/                 * The main components
+│   │   ├── business                * Reusable components
+│   │   ├── appName.components.js   * Declaration of the components
+│   │   ├── container/              * The container of every views
+│   │   ├── orchestration/          * Event listening and forwarding
+│   │   └── plugins/                * Plugins components (event, http, etc.)
+│   ├── css/                        * Global CSS files
+│   ├── index.html                  * Entry point HTML
+│   ├── init.js                     * Entry point JS (angular bootstaping pollyfills)
+│   └── views/                      * Views of the application, use container components
+├── bower_components/               * Third party libraries install via bower
+├── bower.json                      * The list of the third party libraries
+├── coverage/                       * The result of the unit test coverage
+├── dist/                           * The compiled application via gulp
+├── e2e/                            * The e2e tests
+│   ├── dist/                       * Compiled e2e tests
+│   └── src/                        * Source e2e tests (ES6)
+├── gulpfile.js                     * Contains the gulp build tasks
+├── karma.conf.js                   * The config file for karma test runner
+├── mobile/                         * The cordova directory project
+│   ├── config.xml                  * Cordova config file
+│   ├── hooks/                      * Used for plugins
+│   ├── platforms/                  * Cordova platforms
+│   ├── plugins/                    * Cordova plugins
+│   ├── res/                        * Resource files (splash, icons, etc.)
+│   └── www/                        * Compiled web source files
+├── node_modules/                   * Third party libraries used for gulp
+├── package.json                    * The list of the third party libraries for gulp
+├── protractor.conf.js              * The config file for e2e tests
 └── README.md 
 ```
 
