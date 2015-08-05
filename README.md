@@ -97,7 +97,7 @@ This will generate a new component in the selected module. Don't forget to add i
 │   ├── product.js                  * Angular component declaration in a scoped module
 │   ├── product.service.js          * Service (logic)
 │   └── product.service.spec.js     * Service unit test
-└── appName.business.js           * Parent module definition registering child components
+└── appName.business.js             * Parent module definition registering child components
 ```
 
 # TODO
