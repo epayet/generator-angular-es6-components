@@ -6,9 +6,9 @@
   "main": "app/index.js",
   "repository": "epayet/generator-angular-es6-components",
   "author": {
-    "name": "",
-    "email": "",
-    "url": ""
+    "name": "Emmanuel Payet",
+    "email": "jakspinning@gmail.com",
+    "url": "http://emmanuel-payet.me"
   },
   "scripts": {
     "test": "mocha"
